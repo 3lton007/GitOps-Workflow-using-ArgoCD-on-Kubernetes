@@ -24,8 +24,13 @@ spec:
             - name: VERSION
               valueFrom:
                 configMapKeyRef:
-                  key: verion
-                  name: appconfig
+                  key: version
+                  name: app-config
+            - name: ENVIROMENT
+              valueFrom:
+                configMapKeyRef:
+                  key: enviroment
+                  name: app-config
           resources:
             requests:
               cpu: 100m
