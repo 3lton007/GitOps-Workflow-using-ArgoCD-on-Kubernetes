@@ -26,10 +26,10 @@ spec:
                 configMapKeyRef:
                   key: version
                   name: app-config
-            - name: ENVIROMENT
+            - name: ENVIRONMENT
               valueFrom:
                 configMapKeyRef:
-                  key: enviroment
+                  key: environment
                   name: app-config
           resources:
             requests:
