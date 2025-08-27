@@ -25,13 +25,13 @@ spec:
             - containerPort: 80
           livenessProbe:
             httpGet:
-              path: /health
+              path: /
               port: 80
             initialDelaySeconds: 30
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /ready
+              path: /
               port: 80
             initialDelaySeconds: 5
             periodSeconds: 5
@@ -54,4 +54,3 @@ spec:
               cpu: 500m
               memory: 512Mi
 
-# In deployment.yaml, add sync wave annotation
