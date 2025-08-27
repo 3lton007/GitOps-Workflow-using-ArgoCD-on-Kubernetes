@@ -20,7 +20,7 @@ configMapGenerator:
     behavior: replace
     literals:
       - version=v1.0.0-dev
-      - enviroment=development
+      - environment=development
       - debug=true
 
 #Single replica for dev

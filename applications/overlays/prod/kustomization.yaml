@@ -20,7 +20,7 @@ configMapGenerator:
     behavior: replace
     literals:
       - version=v1.0.0-dev
-      - enviroment=production
+      - environment=production
       - debug=false
 
 #More Replicas for Prod
