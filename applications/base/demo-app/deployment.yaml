@@ -12,6 +12,9 @@ spec:
       app: demo-app
   template:
     metadata:
+      annotations:
+        argocd.argoproj.io/sync-wave: "1"
+        argocd.argoproj.io/health-check: "true"
       labels:
         app: demo-app
     spec:
@@ -20,6 +23,18 @@ spec:
           image: nginx:1.21
           ports:
             - containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
           env:
             - name: VERSION
               valueFrom:
@@ -38,3 +53,5 @@ spec:
             limits:
               cpu: 500m
               memory: 512Mi
+
+# In deployment.yaml, add sync wave annotation
