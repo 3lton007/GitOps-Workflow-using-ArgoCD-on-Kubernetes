@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  flask-app:
+    build: .
+    container_name: flask-ci-cd-app
+    ports:
+      - "3000:3000"
+    environment:
+      - ENV=production
+      - VERSION=1.0.0
