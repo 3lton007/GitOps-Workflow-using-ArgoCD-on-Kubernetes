@@ -1,0 +1,77 @@
+
+# monitoring/argocd-grafana.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: argocd
+data:
+  prometheus.yaml: |
+    apiVersion: 1
+    datasources:
+    - name: Prometheus
+      type: prometheus
+      url: http://prometheus-argocd:9090
+      access: proxy
+      isDefault: true
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-admin
+  namespace: argocd
+data:
+  password: YWRtaW4=  # admin in base64
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana-argocd
+  namespace: argocd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana-argocd
+  template:
+    metadata:
+      labels:
+        app: grafana-argocd
+    spec:
+      containers:
+      - name: grafana
+        image: grafana/grafana:9.3.0
+        ports:
+        - containerPort: 3000
+        env:
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: grafana-admin
+              key: password
+        volumeMounts:
+        - name: grafana-storage
+          mountPath: /var/lib/grafana
+        - name: grafana-datasources
+          mountPath: /etc/grafana/provisioning/datasources
+      volumes:
+      - name: grafana-storage
+        emptyDir: {}
+      - name: grafana-datasources
+        configMap:
+          name: grafana-datasources
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-argocd
+  namespace: argocd
+spec:
+  selector:
+    app: grafana-argocd
+  ports:
+  - port: 3000
+    targetPort: 3000

@@ -1,0 +1,28 @@
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-argocd-alerts
+  namespace: argocd
+data:
+  alerts.yml: |
+    groups:
+    - name: argocd
+      rules:
+      - alert: ArgoCDAppNotSynced
+        expr: argocd_app_info{sync_status!="Synced"} == 1
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "ArgoCD app {{$labels.name}} not synced"
+          description: "{{$labels.name}} sync status is {{$labels.sync_status}}"
+          
+      - alert: ArgoCDAppUnhealthy  
+        expr: argocd_app_info{health_status!="Healthy"} == 1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "ArgoCD app {{$labels.name}} unhealthy"
+          description: "{{$labels.name}} health status is {{$labels.health_status}}"
